@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@theme {
+  --font-poppins: Poppins, sans-serif;
+  /* Color */
+  --color-light-gray: #E6E6E6;
+  --color-dark-gray: #6B6565;
+  --color-red: #FF5252;
+  --color-primary-yellow: #FFD470;
+  --color-secondary-yellow: #FFF9EB;
+  --color-dark-blue: #111827;
+  /* Breakpoint */
+  /* --breakpoint-md-custom: 1314px */
+  --breakpoint-md-custom: 1478px
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+
+body {
+  font-family: 'IBM Plex Sans Variable', sans-serif;
+}
