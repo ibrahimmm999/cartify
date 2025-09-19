@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import { ChevronDown, Funnel, ArrowDownUp, X } from "lucide-react";
 import { getProducts } from "../../services/products.service";
 import ProductCard from "../../components/fragments/ProductCard";
-import { useParams } from "react-router";
+import { useParams, useSearchParams } from "react-router";
 import { slugify } from "../../utils/slugify";
 
 const ProductsPage = () => {
@@ -15,6 +15,8 @@ const ProductsPage = () => {
   const [priceRange, setPriceRange] = useState([0, 5000]);
   const [showSortBy, setShowSortBy] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
+  const [searchParams] = useSearchParams();
+  const keyword = searchParams.get("search") || "";
   useEffect(() => {
     setSortBy("Price");
     setRatings([]);
@@ -30,6 +32,15 @@ const ProductsPage = () => {
       }
     });
   }, [category]);
+
+  useEffect(() => {
+    if (Array.isArray(products)) {
+      let filtered = products.filter((item) =>
+        item.title.toLowerCase().includes(keyword.toLowerCase())
+      );
+      setFilteredProducts(filtered);
+    }
+  }, [keyword]);
 
   const filterProducts = () => {
     let filtered = products;
@@ -234,7 +245,7 @@ const Header = ({
         <div
           className={`bg-white fixed top-0 left-0 right-0 bottom-0 px-8 py-4 transform transition-transform duration-300 ease-in-out z-50 md:absolute md:top-8 md:bg-light-gray md:rounded-2xl md:w-full md:flex md:flex-col md:gap-2 md:shadow-md md:overflow-hidden md:transition-all md:duration-300 md:origin-top ${
             showSortBy
-              ? "md:h-60 md:opacity-100 md:scale-y-100 translate-x-0"
+              ? "md:h-68 md:opacity-100 md:scale-y-100 translate-x-0"
               : "md:max-h-0 md:opacity-0 md:scale-y-0 -translate-x-full"
           }`}
         >

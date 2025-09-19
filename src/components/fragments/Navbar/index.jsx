@@ -1,7 +1,7 @@
 import { Search, ShoppingCart, User2, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getProducts } from "../../../services/products.service";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { slugify } from "../../../utils/slugify";
 
 const SIDEBAR_ANIM_DURATION = 1000;
@@ -10,7 +10,9 @@ const Navbar = () => {
   const [navItems, setNavItems] = useState([]);
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [keyword, setKeyword] = useState("");
   const location = useLocation();
+  const navigate = useNavigate();
   useEffect(() => {
     getProducts((products) => {
       if (Array.isArray(products)) {
@@ -44,6 +46,11 @@ const Navbar = () => {
     setTimeout(() => {
       setIsMounted(false);
     }, SIDEBAR_ANIM_DURATION);
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    navigate(`${location.pathname}?search=${keyword}`);
   };
 
   useEffect(() => {
@@ -104,7 +111,7 @@ const Navbar = () => {
       <div
         className={`w-9/10 mx-auto h-20 border-b border-b-light-gray flex justify-between items-center`}
       >
-        <div className=" flex gap-20 items-center ">
+        <div className=" flex gap-8 items-center ">
           <div className=" flex gap-3 items-center ">
             <button onClick={openNav}>
               <Menu size={32} className="lg:hidden" />
@@ -112,14 +119,14 @@ const Navbar = () => {
             <img src="/logo.svg" alt="logo" className="h-12 hidden md:block" />
             <p className="font-bold text-xl logo hidden md:block">Cartify</p>
           </div>
-          <ul className="hidden lg:flex gap-10 ">
+          <ul className="hidden lg:flex gap-6 ">
             {navItems?.map((item, index) => {
               const slug = item === "Home" ? "home" : slugify(item);
               return (
                 <li key={index}>
                   <Link to={item === "Home" ? "/" : `/products/${slug}`}>
                     <button
-                      className={` text-xl capitalize ${
+                      className={` text-base capitalize ${
                         slug === navActive
                           ? "font-bold text-black cursor-default"
                           : "hover:font-bold text-dark-gray font-medium cursor-pointer "
@@ -135,8 +142,25 @@ const Navbar = () => {
             })}
           </ul>
         </div>
-        <div className="flex gap-8">
-          <Search />
+        <div className="flex gap-4 md:gap-8 h-full items-center justify-end">
+          <form
+            className={`${
+              navActive == "home" && "hidden"
+            } border pl-2 px-1 py-1 flex gap-1 rounded relative w-1/2`}
+            onSubmit={handleSearch}
+          >
+            <input
+              value={keyword}
+              type="text"
+              onChange={(e) => setKeyword(e.target.value)}
+              placeholder="Search..."
+              className="border-none focus:outline-none flex-1 w-full"
+            />
+            <button type="submit" className="cursor-pointer">
+              <Search />
+            </button>
+          </form>
+
           <ShoppingCart />
           <User2 />
         </div>
