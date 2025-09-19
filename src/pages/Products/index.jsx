@@ -139,7 +139,6 @@ const Header = ({
         setShowSortBy(false);
       }
     }
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -154,76 +153,24 @@ const Header = ({
         </h1>
         <p className="text-sm md:text-base">{`(${productsLength})`}</p>
       </div>
-      {/* Sort and Filter MD and SM */}
-      <div className="md:hidden flex gap-4">
-        <button onClick={() => setShowFilter(true)}>
-          <Funnel />
-        </button>
-        <button onClick={() => setShowSortBy(true)}>
-          <ArrowDownUp />
-        </button>
-        <div
-          ref={dropdownRef}
-          className={`bg-white fixed top-0 left-0 right-0 bottom-0 px-8 py-4 transform transition-transform duration-300 ease-in-out z-50 ${
-            showFilter || showSortBy ? "translate-x-0" : "-translate-x-full"
-          }`}
-        >
-          <div className="flex items-center justify-between mb-8">
-            <h3 className="font-semibold text-2xl">
-              {showFilter ? "Filter By" : "Sort By"}
-            </h3>
-            <button
-              onClick={() => {
-                setShowFilter(false);
-                setShowSortBy(false);
-              }}
-            >
-              <X size={32} />
-            </button>
-          </div>
-          {showFilter && (
-            <FilterSection
-              filterProducts={filterProducts}
-              ratings={ratings}
-              setRatings={setRatings}
-              priceRange={priceRange}
-              setPriceRange={setPriceRange}
-              isDropDown={true}
-            />
-          )}
-          {showSortBy && (
-            <div className="flex flex-col gap-6">
-              {sortByList.map((filter, index) => (
-                <button
-                  key={index}
-                  className={`px-3 pt-3 first:pt-3 last:pb-3 text-left ${
-                    filter === sortBy
-                      ? "font-bold cursor-default"
-                      : "hover:font-semibold hover:text-gray-800 cursor-pointer"
-                  }`}
-                  type="button"
-                  onClick={() => {
-                    setSortBy(filter);
-                    setShowSortBy(false);
-                  }}
-                >
-                  {filter}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-      {/* Sort and Filter LG */}
-      <div className="md:flex gap-8 hidden relative">
+      {/* Sort and Filter */}
+      <div
+        className="flex gap-4 mr-4 md:mr-0 md:gap-8 relative"
+        ref={dropdownRef}
+      >
         <button
+          type="button"
           className="flex md-custom:hidden items-end gap-1 cursor-pointer"
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation(); // cegah bubbling
             setShowSortBy(false);
             setShowFilter(!showFilter);
           }}
         >
-          <div className="flex items-end gap-2 ">
+          <div className="block md:hidden" type="button">
+            <Funnel />
+          </div>
+          <div className="md:flex hidden items-end gap-2 ">
             Filter
             <ChevronDown
               size={22}
@@ -234,13 +181,24 @@ const Header = ({
           </div>
         </button>
         <div
-          ref={dropdownRef}
-          className={` md-custom:hidden absolute top-8 bg-light-gray rounded-xl w-full py-4 px-6 flex flex-col gap-2 shadow-md transition-all overflow-y-scroll custom-scroll duration-300 origin-top ${
+          onClick={(e) => e.stopPropagation()}
+          className={`bg-white fixed top-0 left-0 right-0 bottom-0 px-8 py-4 transform transition-transform duration-300 ease-in-out z-50 md-custom:hidden md:absolute md:top-8 md:bg-light-gray md:rounded-xl md:w-full md:py-4 md:px-6 md:flex md:flex-col md:gap-2 md:shadow-md md:transition-all md:overflow-y-scroll md:custom-scroll md:duration-300 md:origin-top ${
             showFilter
-              ? "max-h-100 opacity-100 scale-y-100"
-              : "max-h-0 opacity-0 scale-y-0"
+              ? "md:h-100 md:opacity-100 md:scale-y-100 translate-x-0"
+              : "md:max-h-0 md:opacity-0 md:scale-y-0 -translate-x-full"
           }`}
         >
+          <div className="flex items-center justify-between mb-8 md:hidden">
+            <h3 className="font-semibold text-2xl">Filter By</h3>
+            <button
+              onClick={() => {
+                setShowFilter(false);
+                setShowSortBy(false);
+              }}
+            >
+              <X size={32} />
+            </button>
+          </div>
           <FilterSection
             filterProducts={filterProducts}
             ratings={ratings}
@@ -250,8 +208,7 @@ const Header = ({
             isDropDown={true}
           />
         </div>
-        <div className="flex gap-2 items-end justify-start w-46 ">
-          <p>Sort by:</p>
+        <div className="flex md:gap-2 items-end justify-start md:w-46 ">
           <button
             onClick={() => {
               setShowFilter(false);
@@ -259,39 +216,58 @@ const Header = ({
             }}
             className="flex items-end gap-1 cursor-pointer"
           >
-            <p className="font-bold ml-2">{sortBy}</p>
-            <ChevronDown
-              size={22}
-              className={`transition-transform duration-300 ${
-                showSortBy && "rotate-180"
-              } `}
-            />
+            <div className="block md:hidden">
+              <ArrowDownUp />
+            </div>
+            <div className="md:flex items-end gap-1 cursor-pointer hidden">
+              <p>Sort by:</p>
+              <p className="font-bold ml-2">{sortBy}</p>
+              <ChevronDown
+                size={22}
+                className={`transition-transform duration-300 ${
+                  showSortBy && "rotate-180"
+                } `}
+              />
+            </div>
           </button>
         </div>
         <div
-          className={`absolute top-8 bg-light-gray rounded-2xl w-full  flex flex-col gap-2 shadow-md overflow-hidden transition-all duration-300 origin-top ${
+          className={`bg-white fixed top-0 left-0 right-0 bottom-0 px-8 py-4 transform transition-transform duration-300 ease-in-out z-50 md:absolute md:top-8 md:bg-light-gray md:rounded-2xl md:w-full md:flex md:flex-col md:gap-2 md:shadow-md md:overflow-hidden md:transition-all md:duration-300 md:origin-top ${
             showSortBy
-              ? "max-h-60 opacity-100 scale-y-100"
-              : "max-h-0 opacity-0 scale-y-0"
+              ? "md:h-60 md:opacity-100 md:scale-y-100 translate-x-0"
+              : "md:max-h-0 md:opacity-0 md:scale-y-0 -translate-x-full"
           }`}
         >
-          {sortByList.map((filter, index) => (
+          <div className="flex items-center justify-between mb-8 md:hidden">
+            <h3 className="font-semibold text-2xl">Filter By</h3>
             <button
-              key={index}
-              className={`px-3 pt-3 first:pt-3 last:pb-3 text-left ${
-                filter === sortBy
-                  ? "font-bold cursor-default"
-                  : "hover:font-semibold hover:text-gray-800 cursor-pointer"
-              }`}
-              type="button"
               onClick={() => {
-                setSortBy(filter);
-                setShowSortBy(!showSortBy);
+                setShowFilter(false);
+                setShowSortBy(false);
               }}
             >
-              {filter}
+              <X size={32} />
             </button>
-          ))}
+          </div>
+          <div className="flex flex-col gap-6">
+            {sortByList.map((filter, index) => (
+              <button
+                key={index}
+                className={`px-3 pt-3 first:pt-3 last:pb-3 text-left ${
+                  filter === sortBy
+                    ? "font-bold cursor-default"
+                    : "hover:font-semibold hover:text-gray-800 cursor-pointer"
+                }`}
+                type="button"
+                onClick={() => {
+                  setSortBy(filter);
+                  setShowSortBy(!showSortBy);
+                }}
+              >
+                {filter}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </header>
