@@ -7,9 +7,7 @@ import ProductCard from "../../components/fragments/ProductCard";
 
 const HomePage = () => {
   const [popularProducts, setPopularProducts] = useState([]);
-  const [loading, setLoading] = useState(false);
   useEffect(() => {
-    setLoading(true);
     getProducts((products) => {
       if (Array.isArray(products)) {
         const filteredProducts = products
@@ -20,7 +18,6 @@ const HomePage = () => {
         console.log("error fetching products");
       }
     });
-    setLoading(false);
   }, []);
 
   return (

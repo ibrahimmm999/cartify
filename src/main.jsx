@@ -7,6 +7,7 @@ import ProductsPage from "./pages/Products";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import "./index.css";
 import MainLayout from "./components/layouts/Main";
+import ProductDetailPage from "./pages/ProductDetail";
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,7 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: <HomePage /> },
       { path: "/products/:category", element: <ProductsPage /> },
+      { path: "/product/:id", element: <ProductDetailPage /> },
     ],
   },
 ]);

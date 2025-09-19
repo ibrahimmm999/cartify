@@ -54,6 +54,7 @@ const Navbar = () => {
   };
 
   useEffect(() => {
+    setKeyword("");
     closeNav();
   }, [location.pathname]);
 

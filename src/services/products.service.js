@@ -9,7 +9,7 @@ export const getProducts = (callback) => {
 
 export const getDetailProduct = ({ id, callback }) => {
   axios
-    .get("https://fakestoreapi.com/product/" + id)
-    .then((res) => callback(res))
+    .get("https://fakestoreapi.com/products/" + id)
+    .then((res) => callback(res.data))
     .catch((err) => callback(err));
 };
