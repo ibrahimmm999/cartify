@@ -1,6 +1,6 @@
 import { Range } from "react-range";
 import { useEffect, useState, useRef } from "react";
-import { ChevronDown, Funnel, ArrowDownUp } from "lucide-react";
+import { ChevronDown, Funnel, ArrowDownUp, X } from "lucide-react";
 import { getProducts } from "../../services/products.service";
 import ProductCard from "../../components/fragments/ProductCard";
 import { useParams } from "react-router";
@@ -13,6 +13,8 @@ const ProductsPage = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [ratings, setRatings] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 5000]);
+  const [showSortBy, setShowSortBy] = useState(false);
+  const [showFilter, setShowFilter] = useState(false);
   useEffect(() => {
     setSortBy("Price");
     setRatings([]);
@@ -44,6 +46,7 @@ const ProductsPage = () => {
     );
 
     setFilteredProducts(sortProducts(filtered, sortBy));
+    setShowFilter(false);
   };
 
   const sortProducts = (list, sortBy) => {
@@ -76,6 +79,8 @@ const ProductsPage = () => {
     <>
       <div className=" w-9/10 mx-auto">
         <Header
+          productsLength={filteredProducts.length}
+          title={category}
           filterProducts={filterProducts}
           ratings={ratings}
           setRatings={setRatings}
@@ -83,6 +88,10 @@ const ProductsPage = () => {
           setPriceRange={setPriceRange}
           sortBy={sortBy}
           setSortBy={setSortBy}
+          showSortBy={showSortBy}
+          setShowSortBy={setShowSortBy}
+          showFilter={showFilter}
+          setShowFilter={setShowFilter}
         />
 
         <main className="flex">
@@ -107,16 +116,20 @@ const ProductsPage = () => {
 };
 
 const Header = ({
+  title,
   ratings,
   setRatings,
   priceRange,
   setPriceRange,
   filterProducts,
+  productsLength,
   sortBy,
   setSortBy,
+  showSortBy,
+  setShowSortBy,
+  showFilter,
+  setShowFilter,
 }) => {
-  const [showSortBy, setShowSortBy] = useState(false);
-  const [showFilter, setShowFilter] = useState(false);
   const dropdownRef = useRef(null);
   useEffect(() => {
     function handleClickOutside(event) {
@@ -136,18 +149,73 @@ const Header = ({
   return (
     <header className="flex justify-between items-center h-fit my-12 w-full">
       <div className="flex gap-2 items-center">
-        <h1 className="font-bold text-base md:text-xl lg:text-2xl">
-          Mens Category
+        <h1 className="font-bold text-base md:text-xl lg:text-2xl capitalize">
+          {title.split("-")[0]}
         </h1>
-        <p className="text-sm md:text-base">(57)</p>
+        <p className="text-sm md:text-base">{`(${productsLength})`}</p>
       </div>
       {/* Sort and Filter MD and SM */}
       <div className="md:hidden flex gap-4">
-        <Funnel />
-        <ArrowDownUp />
+        <button onClick={() => setShowFilter(true)}>
+          <Funnel />
+        </button>
+        <button onClick={() => setShowSortBy(true)}>
+          <ArrowDownUp />
+        </button>
+        <div
+          ref={dropdownRef}
+          className={`bg-white fixed top-0 left-0 right-0 bottom-0 px-8 py-4 transform transition-transform duration-300 ease-in-out z-50 ${
+            showFilter || showSortBy ? "translate-x-0" : "-translate-x-full"
+          }`}
+        >
+          <div className="flex items-center justify-between mb-8">
+            <h3 className="font-semibold text-2xl">
+              {showFilter ? "Filter By" : "Sort By"}
+            </h3>
+            <button
+              onClick={() => {
+                setShowFilter(false);
+                setShowSortBy(false);
+              }}
+            >
+              <X size={32} />
+            </button>
+          </div>
+          {showFilter && (
+            <FilterSection
+              filterProducts={filterProducts}
+              ratings={ratings}
+              setRatings={setRatings}
+              priceRange={priceRange}
+              setPriceRange={setPriceRange}
+              isDropDown={true}
+            />
+          )}
+          {showSortBy && (
+            <div className="flex flex-col gap-6">
+              {sortByList.map((filter, index) => (
+                <button
+                  key={index}
+                  className={`px-3 pt-3 first:pt-3 last:pb-3 text-left ${
+                    filter === sortBy
+                      ? "font-bold cursor-default"
+                      : "hover:font-semibold hover:text-gray-800 cursor-pointer"
+                  }`}
+                  type="button"
+                  onClick={() => {
+                    setSortBy(filter);
+                    setShowSortBy(false);
+                  }}
+                >
+                  {filter}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
       {/* Sort and Filter LG */}
-      <div ref={dropdownRef} className="md:flex gap-8 hidden relative">
+      <div className="md:flex gap-8 hidden relative">
         <button
           className="flex md-custom:hidden items-end gap-1 cursor-pointer"
           onClick={() => {
@@ -166,6 +234,7 @@ const Header = ({
           </div>
         </button>
         <div
+          ref={dropdownRef}
           className={` md-custom:hidden absolute top-8 bg-light-gray rounded-xl w-full py-4 px-6 flex flex-col gap-2 shadow-md transition-all overflow-y-scroll custom-scroll duration-300 origin-top ${
             showFilter
               ? "max-h-100 opacity-100 scale-y-100"
@@ -256,7 +325,7 @@ const FilterSection = ({
         <div className="flex w-full items-center gap-3 mt-4 text-sm lg:text-base">
           <input
             className={`bg-white border border-gray-300 px-3 py-0.5 rounded ${
-              isDropDown ? "w-8 lg:w-16" : "w-18"
+              isDropDown ? "w-16" : "w-18"
             }`}
             type="number"
             id="startPrice"
@@ -274,7 +343,7 @@ const FilterSection = ({
           -
           <input
             className={`bg-white border border-gray-300 px-3 py-0.5 rounded ${
-              isDropDown ? "w-8 lg:w-16" : "w-18"
+              isDropDown ? "w-16" : "w-18"
             }`}
             type="number"
             id="endPrice"
