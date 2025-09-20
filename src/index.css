@@ -11,7 +11,8 @@
   --color-dark-blue: #111827;
   /* Breakpoint */
   /* --breakpoint-md-custom: 1314px */
-  --breakpoint-md-custom: 1478px
+  --breakpoint-md-custom: 1478px;
+  --breakpoint-md-for-cart: 1030px;
 }
 
 html {

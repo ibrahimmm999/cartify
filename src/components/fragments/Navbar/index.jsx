@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { getProducts } from "../../../services/products.service";
 import { Link, useLocation, useNavigate } from "react-router";
 import { slugify } from "../../../utils/slugify";
+import { useSelector } from "react-redux";
 
 const SIDEBAR_ANIM_DURATION = 1000;
 
@@ -13,6 +14,9 @@ const Navbar = () => {
   const [keyword, setKeyword] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
+
+  const cart = useSelector((state) => state.cart.data);
+
   useEffect(() => {
     getProducts((products) => {
       if (Array.isArray(products)) {
@@ -161,8 +165,16 @@ const Navbar = () => {
               <Search />
             </button>
           </form>
-
-          <ShoppingCart />
+          <Link to={"/cart"}>
+            <div className={`${cart.length > 0 && "relative pr-1"}`}>
+              <div
+                className={`${
+                  cart.length < 1 && "hidden"
+                } h-3 w-3 rounded-4xl absolute right-0 border-2 border-white bg-red`}
+              />
+              <ShoppingCart />
+            </div>
+          </Link>
           <User2 />
         </div>
       </div>

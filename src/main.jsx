@@ -8,6 +8,9 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import "./index.css";
 import MainLayout from "./components/layouts/Main";
 import ProductDetailPage from "./pages/ProductDetail";
+import { Provider } from "react-redux";
+import store from "./redux/store";
+import CartPage from "./pages/Cart";
 
 const router = createBrowserRouter([
   {
@@ -17,12 +20,15 @@ const router = createBrowserRouter([
       { path: "/", element: <HomePage /> },
       { path: "/products/:category", element: <ProductsPage /> },
       { path: "/product/:id", element: <ProductDetailPage /> },
+      { path: "/cart", element: <CartPage /> },
     ],
   },
 ]);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </StrictMode>
 );

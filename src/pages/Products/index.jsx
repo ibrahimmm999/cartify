@@ -5,6 +5,7 @@ import { getProducts } from "../../services/products.service";
 import ProductCard from "../../components/fragments/ProductCard";
 import { useParams, useSearchParams } from "react-router";
 import { slugify } from "../../utils/slugify";
+import Button from "../../components/elements/Button";
 
 const ProductsPage = () => {
   const { category } = useParams();
@@ -363,12 +364,11 @@ const FilterSection = ({
           onChange={() => toggleRating(r)}
         />
       ))}
-      <button
+      <Button
+        children={"Apply"}
         onClick={filterProducts}
-        className="bg-primary-yellow rounded px-6 py-2 text-center font-semibold border-2 cursor-pointer mt-8"
-      >
-        Apply
-      </button>
+        classname={"w-fit px-6 py-2 font-semibold mt-8"}
+      />
     </div>
   );
 };

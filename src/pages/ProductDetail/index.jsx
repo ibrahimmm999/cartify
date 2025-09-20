@@ -2,12 +2,16 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
 import { getDetailProduct } from "../../services/products.service";
 import { slugify } from "../../utils/slugify";
-import { Minus, Plus, Star } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../redux/slices/cartSlice";
+import QuantitySelector from "../../components/elements/QuantitySelector";
+import { Star } from "lucide-react";
 
 const ProductDetailPage = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [totalItem, setTotalItem] = useState(1);
+  const dispatch = useDispatch();
   useEffect(() => {
     getDetailProduct({
       id,
@@ -39,35 +43,11 @@ const ProductDetailPage = () => {
         <p className="font-bold text-2xl w-full text-left">${product?.price}</p>
         <p className="text-justify mb-8 mt-2 w-full">{product?.description}</p>
         <div className="flex w-full gap-6">
-          <div className="flex border rounded w-fit justify-between py-2 px-2">
-            <Minus
-              onClick={() => {
-                if (totalItem > 0) {
-                  setTotalItem((prev) => prev - 1);
-                }
-              }}
-              className="cursor-pointer"
-              color={totalItem > 0 ? "black" : "gray"}
-            />
-            <input
-              value={totalItem}
-              onChange={(e) => {
-                const value = e.target.value;
-                if (/^\d*$/.test(value)) {
-                  const number = parseInt(value || "0", 10);
-                  setTotalItem(number < 0 ? 0 : number); // minimal 0
-                }
-              }}
-              type="text"
-              className="border-none focus:outline-none w-12 md:w-20 text-center font-bold"
-            />
-            <Plus
-              className="cursor-pointer"
-              onClick={() => setTotalItem((prev) => prev + 1)}
-            />
-          </div>
+          <QuantitySelector totalItem={totalItem} setTotalItem={setTotalItem} />
           <button
-            onClick={() => console.log(totalItem)}
+            onClick={() => {
+              dispatch(addToCart({ id, data: product, qty: totalItem }));
+            }}
             disabled={totalItem < 1}
             className={`${
               totalItem > 0
