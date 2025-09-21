@@ -9,7 +9,7 @@ const AuthLayout = () => {
         <>
           {" "}
           <img
-            src={"./public/auth-bg.jpg"}
+            src={"/auth-bg.jpg"}
             alt="bg"
             className="block w-full md:w-1/2 h-1/3 md:h-full object-cover"
           />
@@ -23,7 +23,7 @@ const AuthLayout = () => {
             <Outlet />
           </div>
           <img
-            src={"./public/auth-bg.jpg"}
+            src={"/auth-bg.jpg"}
             alt="bg"
             className="block w-full md:w-1/2 h-1/3 md:h-full object-cover"
           />

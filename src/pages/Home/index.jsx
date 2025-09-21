@@ -46,7 +46,7 @@ const HomePage = () => {
         </div>
         <div className="w-2/7 hidden md:flex justify-center bg-primary-yellow rounded-l-4xl relative h-120">
           <img
-            src={"./public/model.png"}
+            src={"/model.png"}
             alt="Model"
             className="object-cover h-128 absolute top-5"
           />
