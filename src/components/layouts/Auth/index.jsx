@@ -1,7 +1,5 @@
 import { Outlet, useLocation } from "react-router";
 
-import bgImage from "../../../assets/auth-bg.jpg";
-
 const AuthLayout = () => {
   const location = useLocation();
   const type = location.pathname.includes("login") ? "login" : "register";
@@ -11,7 +9,7 @@ const AuthLayout = () => {
         <>
           {" "}
           <img
-            src={bgImage}
+            src={"./public/auth-bg.jpg"}
             alt="bg"
             className="block w-full md:w-1/2 h-1/3 md:h-full object-cover"
           />
@@ -25,7 +23,7 @@ const AuthLayout = () => {
             <Outlet />
           </div>
           <img
-            src={bgImage}
+            src={"./public/auth-bg.jpg"}
             alt="bg"
             className="block w-full md:w-1/2 h-1/3 md:h-full object-cover"
           />

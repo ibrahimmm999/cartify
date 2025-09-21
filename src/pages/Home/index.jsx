@@ -2,7 +2,6 @@ import "./index.css";
 import { useEffect, useState } from "react";
 import { MoveRight } from "lucide-react";
 import { getProducts } from "../../services/products.service";
-import model from "../../assets/model.png";
 import ProductCard from "../../components/fragments/ProductCard";
 import { useSelector } from "react-redux";
 
@@ -47,7 +46,7 @@ const HomePage = () => {
         </div>
         <div className="w-2/7 hidden md:flex justify-center bg-primary-yellow rounded-l-4xl relative h-120">
           <img
-            src={model}
+            src={"./public/model.png"}
             alt="Model"
             className="object-cover h-128 absolute top-5"
           />
