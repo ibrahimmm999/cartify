@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
 import { getDetailProduct } from "../../services/products.service";
 import { slugify } from "../../utils/slugify";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../redux/slices/cartSlice";
 import QuantitySelector from "../../components/elements/QuantitySelector";
 import { Star } from "lucide-react";
@@ -12,6 +12,7 @@ const ProductDetailPage = () => {
   const [product, setProduct] = useState(null);
   const [totalItem, setTotalItem] = useState(1);
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.data);
   useEffect(() => {
     getDetailProduct({
       id,
@@ -42,22 +43,27 @@ const ProductDetailPage = () => {
         <img src={product?.image} alt="Product Image" className="h-50 mb-6" />
         <p className="font-bold text-2xl w-full text-left">${product?.price}</p>
         <p className="text-justify mb-8 mt-2 w-full">{product?.description}</p>
-        <div className="flex w-full gap-6">
-          <QuantitySelector totalItem={totalItem} setTotalItem={setTotalItem} />
-          <button
-            onClick={() => {
-              dispatch(addToCart({ id, data: product, qty: totalItem }));
-            }}
-            disabled={totalItem < 1}
-            className={`${
-              totalItem > 0
-                ? "bg-primary-yellow text-black"
-                : "bg-gray-500 text-white border-2 border-gray-500"
-            } border-2 w-fit px-6 md:px-10 cursor-pointer`}
-          >
-            Add to Cart
-          </button>
-        </div>
+        {user && (
+          <div className="flex w-full gap-6">
+            <QuantitySelector
+              totalItem={totalItem}
+              setTotalItem={setTotalItem}
+            />
+            <button
+              onClick={() => {
+                dispatch(addToCart({ id, data: product, qty: totalItem }));
+              }}
+              disabled={totalItem < 1}
+              className={`${
+                totalItem > 0
+                  ? "bg-primary-yellow text-black"
+                  : "bg-gray-500 text-white border-2 border-gray-500"
+              } border-2 w-fit px-6 md:px-10 cursor-pointer`}
+            >
+              Add to Cart
+            </button>
+          </div>
+        )}
       </div>
     </>
   );

@@ -4,6 +4,7 @@ import { getProducts } from "../../../services/products.service";
 import { Link, useLocation, useNavigate } from "react-router";
 import { slugify } from "../../../utils/slugify";
 import { useSelector } from "react-redux";
+import Button from "../../elements/Button";
 
 const SIDEBAR_ANIM_DURATION = 1000;
 
@@ -16,6 +17,7 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const cart = useSelector((state) => state.cart.data);
+  const user = useSelector((state) => state.user.data);
 
   useEffect(() => {
     getProducts((products) => {
@@ -147,10 +149,10 @@ const Navbar = () => {
             })}
           </ul>
         </div>
-        <div className="flex gap-4 md:gap-8 h-full items-center justify-end">
+        <div className="flex gap-4 md:gap-8 h-full items-center relative justify-end ">
           <form
             className={`${
-              navActive == "home" && "hidden"
+              navActive == "home" && "invisible"
             } border pl-2 px-1 py-1 flex gap-1 rounded relative w-1/2`}
             onSubmit={handleSearch}
           >
@@ -165,17 +167,28 @@ const Navbar = () => {
               <Search />
             </button>
           </form>
-          <Link to={"/cart"}>
-            <div className={`${cart.length > 0 && "relative pr-1"}`}>
-              <div
-                className={`${
-                  cart.length < 1 && "hidden"
-                } h-3 w-3 rounded-4xl absolute right-0 border-2 border-white bg-red`}
-              />
-              <ShoppingCart />
-            </div>
-          </Link>
-          <User2 />
+
+          {user != null ? (
+            <>
+              <Link to={"/cart"}>
+                <div className={`${cart.length > 0 && "relative pr-1"}`}>
+                  <div
+                    className={`${
+                      cart.length < 1 && "hidden"
+                    } h-3 w-3 rounded-4xl absolute right-0 border-2 border-white bg-red`}
+                  />
+                  <ShoppingCart />
+                </div>
+              </Link>
+              <Link to={"/profile"}>
+                <User2 />
+              </Link>
+            </>
+          ) : (
+            <Link to={"/login"} className="border rounded px-4 py-1">
+              Login
+            </Link>
+          )}
         </div>
       </div>
     </div>

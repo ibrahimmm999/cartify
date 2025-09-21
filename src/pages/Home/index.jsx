@@ -4,8 +4,10 @@ import { MoveRight } from "lucide-react";
 import { getProducts } from "../../services/products.service";
 import model from "../../assets/model.png";
 import ProductCard from "../../components/fragments/ProductCard";
+import { useSelector } from "react-redux";
 
 const HomePage = () => {
+  const user = useSelector((state) => state.user.data);
   const [popularProducts, setPopularProducts] = useState([]);
   useEffect(() => {
     getProducts((products) => {

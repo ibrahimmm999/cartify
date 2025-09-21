@@ -90,12 +90,12 @@ const CartPage = () => {
             </div>
             <div className="flex justify-between">
               <p>Delivery</p>
-              <p>${cart.length > 0 ? totalPrice : "0"}</p>
+              <p>${cart.length > 0 ? 50 : 0}</p>
             </div>
             <div className="bg-gray-300 h-0.5 rounded-4xl w-full" />
             <div className="flex justify-between">
               <p>Total</p>
-              <p>${cart.length > 0 ? totalPrice + 50 : "0"}</p>
+              <p>${cart.length > 0 ? totalPrice + 50 : 0}</p>
             </div>
           </div>
           <Button classname={"w-full py-2 mt-3 "} disabled={cart.length < 0}>
